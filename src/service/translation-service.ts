@@ -1,5 +1,6 @@
 import puppeteer from "puppeteer";
 
+// Page cache
 const translators: puppeteer.Page[] = [];
 
 export const launch = async (parallelCount: number = 10) => {
