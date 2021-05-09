@@ -1,4 +1,5 @@
 import puppeteer from "puppeteer";
+import { waitAsync } from "../utility/waitAsync";
 
 // Page cache
 const translators: puppeteer.Page[] = [];
@@ -24,11 +25,10 @@ export const launch = async (parallelCount: number = 10) => {
 };
 
 export const translation = async (value: string) => {
-  const translator = translators.shift();
-  if (!translator) {
-    // TODO: Wait for translator availability
-    return;
-  }
+  const translator = await waitAsync(
+    () => Boolean(translators.length),
+    () => translators.shift()!
+  );
 
   const [, translated] = await Promise.all([
     translator.$eval(
