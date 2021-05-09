@@ -67,8 +67,16 @@ export const translation = async (value: string) => {
         () => element.innerHTML.trim()
       );
 
-      element.innerHTML = "";
       return translated;
+    }),
+  ]);
+
+  await Promise.all([
+    translator.$eval(".lmt__source_textarea", (element) => {
+      (element as HTMLTextAreaElement).value = "";
+    }),
+    translator.$eval(".lmt__target_textarea", (element) => {
+      (element as HTMLTextAreaElement).value = "";
     }),
   ]);
 
