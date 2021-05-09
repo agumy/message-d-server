@@ -5,7 +5,7 @@ import { waitAsync } from "../utility/waitAsync";
 const translators: puppeteer.Page[] = [];
 
 export const launch = async (parallelCount: number = 10) => {
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({ headless: true });
 
   // parallelCountと同数のタブを生成する
   const pages = await Promise.all(
