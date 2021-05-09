@@ -46,31 +46,45 @@ export const translation = async (value: string = "around the wrold.") => {
     return;
   }
 
-  await translator.$eval("#target-dummydiv", (element) => {
-    const observer = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
-        const text = (mutation.target as Element).innerHTML;
-        // @ts-ignore
-        translationResult(text, text);
-      }
-    });
+  const [, translated] = await Promise.all([
+    translator.$eval(
+      ".lmt__source_textarea",
+      (element, value) => {
+        if (typeof value === "string") {
+          (element as HTMLInputElement).value = value;
+          element.dispatchEvent(new KeyboardEvent("input"));
+        }
+      },
+      value
+    ),
+    translator.$eval("#target-dummydiv", async (element) => {
+      const waitAsync = async <T extends () => any>(
+        conditionCallback: () => boolean,
+        callback: T,
+        intervalMillSecond = 100
+      ): Promise<ReturnType<T>> => {
+        if (conditionCallback()) {
+          return callback();
+        }
 
-    observer.observe(element, {
-      attributes: false,
-      childList: true,
-      characterData: true,
-      subtree: false,
-    });
-  });
+        return new Promise((resolve, _reject) => {
+          const intervalId = setInterval(() => {
+            if (!conditionCallback()) {
+              return;
+            }
+            clearInterval(intervalId);
+            resolve(callback());
+          }, intervalMillSecond);
+        });
+      };
 
-  await translator.$eval(
-    ".lmt__source_textarea",
-    (element, value) => {
-      if (typeof value === "string") {
-        (element as HTMLInputElement).value = value;
-        element.dispatchEvent(new KeyboardEvent("input"));
-      }
-    },
-    value
-  );
+      const translated = await waitAsync(
+        () => Boolean(element.innerHTML.trim()),
+        () => element.innerHTML.trim()
+      );
+
+      element.innerHTML = "";
+      return translated;
+    }),
+  ]);
 };
