@@ -1,8 +1,12 @@
 import fastify from "fastify";
+import { launch, translation } from "./service/translation-service";
 
 const server = fastify();
 
+launch();
+
 server.register(require("fastify-formbody"));
+
 server.listen(8080, (err, address) => {
   if (err) {
     console.log(err);
@@ -11,11 +15,18 @@ server.listen(8080, (err, address) => {
   console.log(`Server listening at ${address}`);
 });
 
-server.get("/translation", async (_request, _replay) => {
-  // replay.send("hello");
-  return "hello world";
-});
+server.post<{ Body: { q: string | string[] }; Response: string[] }>(
+  "/translation",
+  async (request, reply) => {
+    const { body } = request;
 
-// server.post("/translation", async (request, replay) => {
-//   return "oig";
-// });
+    const queries = typeof body.q === "string" ? [body.q] : body.q;
+
+    const result = await Promise.all(queries.map((q) => translation(q)));
+
+    reply
+      .code(200)
+      .header("Content-Type", "application/json; charset=UTF-8")
+      .send(result);
+  }
+);
