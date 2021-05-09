@@ -37,9 +37,7 @@ export const translation = async (value: string) => {
         if (typeof value === "string") {
           (element as HTMLInputElement).value = value;
           element.dispatchEvent(new KeyboardEvent("input"));
-          return false;
         }
-        return true;
       },
       value
     ),
