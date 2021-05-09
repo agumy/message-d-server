@@ -87,4 +87,7 @@ export const translation = async (value: string = "around the wrold.") => {
       return translated;
     }),
   ]);
+
+  translators.push(translator);
+  return translated;
 };
