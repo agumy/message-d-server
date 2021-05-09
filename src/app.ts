@@ -2,6 +2,7 @@ import fastify from "fastify";
 
 const server = fastify();
 
+server.register(require("fastify-formbody"));
 server.listen(8080, (err, address) => {
   if (err) {
     console.log(err);
