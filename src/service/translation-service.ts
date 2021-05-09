@@ -22,7 +22,7 @@ export const launch = async (parallelCount: number = 10) => {
   translators.push(...pages);
 };
 
-export const translation = async (value: string = "around the wrold.") => {
+export const translation = async (value: string) => {
   const translator = translators.shift();
   if (!translator) {
     // TODO: Wait for translator availability
