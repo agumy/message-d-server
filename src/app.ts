@@ -7,6 +7,10 @@ launch();
 
 server.register(require("fastify-formbody"));
 
+server.register(require("fastify-cors"), {
+  origin: true,
+});
+
 server.listen(8080, (err, address) => {
   if (err) {
     console.log(err);
