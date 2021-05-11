@@ -3,19 +3,18 @@ import { launch, translation } from "./service/translation-service";
 
 const server = fastify();
 
-launch();
-
 server.register(require("fastify-formbody"));
 
 server.register(require("fastify-cors"), {
   origin: true,
 });
 
-server.listen(8080, (err, address) => {
+server.listen(8080, async (err, address) => {
   if (err) {
-    console.log(err);
+    console.log(err.message);
     process.exit(1);
   }
+  await launch(15);
   console.log(`Server listening at ${address}`);
 });
 
