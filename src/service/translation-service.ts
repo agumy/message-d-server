@@ -30,6 +30,10 @@ export const translation = async (value: string) => {
     () => translators.shift()!
   );
 
+  await translator.$eval(".lmt__language_select--target", (element) => {
+    element.setAttribute("dl-selected-lang", "ja-JA");
+  });
+
   const [, translated] = await Promise.all([
     translator.$eval(
       ".lmt__source_textarea",
