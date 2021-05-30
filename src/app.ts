@@ -14,8 +14,9 @@ server.listen(8080, async (err, address) => {
     console.log(err.message);
     process.exit(1);
   }
-  await launch(15);
   console.log(`Server listening at ${address}`);
+  await launch(15);
+  console.log(`Completed Puppeteer launching`);
 });
 
 server.post<{ Body: { q: string | string[] }; Response: string[] }>(
