@@ -4,6 +4,25 @@ import { waitAsync } from "../utility/waitAsync";
 // Page cache
 const translators: puppeteer.Page[] = [];
 
+const cleanup = async () => {
+  for (const translator of translators) {
+    await translator.close();
+  }
+};
+
+//do something when app is closing
+process.on("exit", cleanup);
+
+//catches ctrl+c event
+process.on("SIGINT", cleanup);
+
+// catches "kill pid" (for example: nodemon restart)
+process.on("SIGUSR1", cleanup);
+process.on("SIGUSR2", cleanup);
+
+//catches uncaught exceptions
+process.on("uncaughtException", cleanup);
+
 export const launch = async (parallelCount: number = 10) => {
   const browser = await puppeteer.launch({ headless: true });
 
