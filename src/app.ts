@@ -35,18 +35,21 @@ server.post<{
   //   },
   //   body: queries,
   // });
-  const res = await fetch("https://api.deepl.com/v2/translate", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: queries,
-  });
+  try {
+    const res = await fetch("https://api.deepl.com/v2/translate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: queries,
+    });
+    const result = await res.json();
 
-  const result = await res.json();
-
-  reply
-    .code(200)
-    .header("Content-Type", "application/json; charset=UTF-8")
-    .send(result);
+    reply
+      .code(200)
+      .header("Content-Type", "application/json; charset=UTF-8")
+      .send(result);
+  } catch (e) {
+    console.log(e);
+  }
 });
